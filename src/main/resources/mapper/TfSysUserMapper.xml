@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.dao.mapper.TfSysUserMapper">
+  <resultMap id="BaseResultMap" type="com.sf.dao.model.TfSysUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="staff_id" jdbcType="VARCHAR" property="staffId" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="mobile_no" jdbcType="VARCHAR" property="mobileNo" />
+    <result column="provinces_code" jdbcType="INTEGER" property="provincesCode" />
+    <result column="city_code" jdbcType="INTEGER" property="cityCode" />
+    <result column="area_code" jdbcType="INTEGER" property="areaCode" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid_tag" jdbcType="BIT" property="validTag" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

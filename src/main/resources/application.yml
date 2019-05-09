@@ -1,0 +1,27 @@
+server:
+  port: 8812
+
+logging:
+  path: /app/data/logs/
+  level:
+    default: debug
+
+spring:
+  #数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+
+    url: jdbc:mysql://127.0.0.1:3306/demo_user_db?characterEncoding=utf-8&useOldAliasMetadataBehavior=true&useSSL=false
+    username: root
+    password: root
+
+    initialSize: 10
+    minIdle: 20
+    maxActive: 200
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    cachetime: 86400
+    timeout: 3000
+    database: 0
