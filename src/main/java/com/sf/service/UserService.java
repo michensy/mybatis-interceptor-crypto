@@ -5,6 +5,8 @@ import com.sf.dao.model.TfSysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Zidong
  * @date 2019/5/9 10:01 AM
@@ -23,5 +25,9 @@ public class UserService {
 
     public TfSysUser getUser(String uid) {
         return userMapper.selectByPrimaryKey(uid);
+    }
+
+    public List<TfSysUser> getAll() {
+        return userMapper.selectAll();
     }
 }

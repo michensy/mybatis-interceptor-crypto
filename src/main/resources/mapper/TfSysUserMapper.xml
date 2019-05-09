@@ -21,4 +21,10 @@
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO tf_sys_user (staff_id, mobile_no) VALUES
+        <foreach collection="users" item="user" index="index" separator=",">
+            (#{user.staffId},#{user.mobileNo})
+        </foreach>
+    </insert>
 </mapper>

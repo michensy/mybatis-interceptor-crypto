@@ -1,7 +1,5 @@
 package com.sf.config;
 
-import com.sf.interceptor.CryptInterceptor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MybatisConfig {
-
-    @Bean
-    public CryptInterceptor cryptInterceptor() {
-        return new CryptInterceptor();
-    }
+    //
+    // @Bean
+    // public CryptInterceptor cryptInterceptor() {
+    //     return new CryptInterceptor();
+    // }
 }

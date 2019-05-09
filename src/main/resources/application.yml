@@ -6,6 +6,9 @@ logging:
   level:
     default: debug
 
+mybatis:
+  mapper-locations: classpath:mapper/**.xml
+
 spring:
   #数据源配置
   datasource:

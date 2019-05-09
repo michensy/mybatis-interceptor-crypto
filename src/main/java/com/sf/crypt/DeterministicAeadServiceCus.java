@@ -22,69 +22,65 @@ import java.util.Optional;
 @Slf4j
 public class DeterministicAeadServiceCus {
 
-    private static KeysetHandle keysetHandle;
+    private static KeysetHandle handle;
 
     private static final String ASSOCIATED_DATA = "landLeaf6546";
 
-    public DeterministicAeadServiceCus() {
-    }
+    private static final String KEY_PATH = "static/data/keyset.json";
 
     static {
         try {
             DeterministicAeadConfig.register();
-            URL resource = DeterministicAeadServiceCus.class.getClassLoader().getResource("static/data/keyset.json");
+            URL resource = DeterministicAeadServiceCus.class.getClassLoader().getResource(KEY_PATH);
             if (null == resource) {
                 throw new Exception("未读取到keyset.json");
             }
             File file = new File(resource.getFile());
-            log.info("密钥 keyset.json : {} associatedData : {} ", file.getAbsolutePath(), ASSOCIATED_DATA);
-            keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(file));
+            log.debug("密钥 keyset.json : {} associatedData : {} ", file.getAbsolutePath(), ASSOCIATED_DATA);
+            handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(file));
         } catch (Exception var4) {
             log.error("加密工具 DeterministicAeadService init 初始化失败" + var4.getMessage(), var4);
         }
     }
 
-    public String encode(String plaintext) {
-        if (StringUtils.isBlank(plaintext)) {
-            return plaintext;
+    public String encode(String text) {
+        if (StringUtils.isBlank(text)) {
+            return text;
         } else {
-            log.info("明文待加密 Text: {}", plaintext);
-
+            log.debug("明文待加密 Text: {}", text);
             String cipherText;
             try {
-                DeterministicAead daead = DeterministicAeadFactory.getPrimitive(keysetHandle);
-                byte[] associatedDataBytes = Optional.ofNullable(ASSOCIATED_DATA).map((a) -> a.getBytes(StandardCharsets.UTF_8)).orElse(null);
-                byte[] cipherTextBytes = daead.encryptDeterministically(plaintext.getBytes(StandardCharsets.UTF_8), associatedDataBytes);
+                DeterministicAead daead = DeterministicAeadFactory.getPrimitive(handle);
+                byte[] associatedDataBytes = Optional.of(ASSOCIATED_DATA).map((a) -> a.getBytes(StandardCharsets.UTF_8)).orElse(null);
+                byte[] cipherTextBytes = daead.encryptDeterministically(text.getBytes(StandardCharsets.UTF_8), associatedDataBytes);
                 cipherText = new String(Base64.getEncoder().encode(cipherTextBytes));
             } catch (Exception var6) {
-                log.warn("DeterministicAeadService encode 加密出错 " + var6.getMessage(), var6);
-                return plaintext;
+                log.debug("加密工具 DeterministicAeadService encode出错 " + var6.getMessage(), var6);
+                return text;
             }
-
-            log.info("加密后密文Base64 Cipher: {}", cipherText);
+            log.debug("加密后密文Base64 Cipher: {}", cipherText);
             return cipherText;
         }
     }
 
     public String decode(String cipherText) {
-        if (StringUtils.isBlank(cipherText)) {
+        // 不合规的数据直接返回
+        if (StringUtils.isBlank(cipherText) || cipherText.length() != 44) {
             return cipherText;
         } else {
-            log.info("密文待解密 Base64 Cipher: {}", cipherText);
-
-            String decryptedCipherText;
+            log.debug("密文待解密 Base64 Cipher: {}", cipherText);
+            String text;
             try {
-                DeterministicAead daead = DeterministicAeadFactory.getPrimitive(keysetHandle);
-                byte[] associatedDataBytes = Optional.ofNullable(ASSOCIATED_DATA).map((a) -> a.getBytes(StandardCharsets.UTF_8)).orElse(null);
+                DeterministicAead daead = DeterministicAeadFactory.getPrimitive(handle);
+                byte[] associatedDataBytes = Optional.of(ASSOCIATED_DATA).map((a) -> a.getBytes(StandardCharsets.UTF_8)).orElse(null);
                 byte[] decryptedCipherTextBytes = daead.decryptDeterministically(Base64.getDecoder().decode(cipherText), associatedDataBytes);
-                decryptedCipherText = new String(decryptedCipherTextBytes, StandardCharsets.UTF_8);
+                text = new String(decryptedCipherTextBytes, StandardCharsets.UTF_8);
             } catch (Exception var6) {
-                log.warn("DeterministicAeadService decode 解密出错 " + var6.getMessage(), var6);
+                log.warn("加密工具 DeterministicAeadService decode出错 " + var6.getMessage(), var6);
                 return cipherText;
             }
-
-            log.info("解密后明文 Text: {}", decryptedCipherText);
-            return decryptedCipherText;
+            log.debug("解密后明文 Text: {}", text);
+            return text;
         }
     }
 }
